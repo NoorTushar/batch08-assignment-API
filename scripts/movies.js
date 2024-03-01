@@ -56,16 +56,19 @@ const getParticularCategory = async (cat_id) => {
       div.innerHTML = `
         <!-- main image -->
         <img src="${category.thumbnail}" alt="" />
-        <div>
+        <div class="flex items-center space-x-3 mt-3">
             <!-- icon -->
-            <div>
-                <img src="" alt="" />
+            <div >
+                <img src="${
+                   category.authors[0].profile_picture
+                }" class="rounded-full w-14 h-14 object-cover" alt="" />
             </div>
             <!-- details -->
             <div>
                 <h3>${category.title}</h3>
-                <p>Author Name</p>
-                <p>100k Views</p>
+                <p>${category.authors[0].profile_name}</p>
+                <p>${category.others.views.replace("K", "")}K Views</p>
+                <p>Verify or not</p>
             </div>
         </div>
         
