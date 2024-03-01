@@ -2,6 +2,8 @@ const btnContainer = document.getElementById("button-container");
 let movieContainer = document.getElementById("movieContainer");
 const noDataDiv = document.getElementById("noDataDiv");
 
+let category_id = 1000;
+
 // 1st function
 const loadAllCategories = async () => {
    const res = await fetch(
@@ -31,8 +33,9 @@ const displayCategories = (cats) => {
 
 // 3rd function
 const getParticularCategory = async (cat_id) => {
+   category_id = cat_id;
    const res = await fetch(
-      `https://openapi.programming-hero.com/api/videos/category/${cat_id}`
+      `https://openapi.programming-hero.com/api/videos/category/${category_id}`
    );
    const data = await res.json();
    const categoryDetails = data.data;
@@ -70,3 +73,5 @@ const getParticularCategory = async (cat_id) => {
       movieContainer.appendChild(div);
    }
 };
+
+getParticularCategory(category_id);
