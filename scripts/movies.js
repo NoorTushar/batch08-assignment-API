@@ -1,8 +1,17 @@
 const btnContainer = document.getElementById("button-container");
 let movieContainer = document.getElementById("movieContainer");
 const noDataDiv = document.getElementById("noDataDiv");
+const sortBtn = document.getElementById("sort-button");
 
 let category_id = 1000;
+
+// this is for sorting
+let sorted = false;
+
+sortBtn.addEventListener("click", () => {
+   sorted = true;
+   getParticularCategory(category_id, sorted);
+});
 
 // 1st function
 const loadAllCategories = async () => {
@@ -40,7 +49,7 @@ const displayCategories = (cats) => {
 };
 
 // 3rd function
-const getParticularCategory = async (cat_id) => {
+const getParticularCategory = async (cat_id, sorted) => {
    category_id = cat_id;
    const res = await fetch(
       `https://openapi.programming-hero.com/api/videos/category/${category_id}`
@@ -48,14 +57,25 @@ const getParticularCategory = async (cat_id) => {
    const data = await res.json();
    const categoryDetails = data.data;
 
-   movieContainer.innerHTML = "";
+   // sorting data functionality
+   if (sorted) {
+      categoryDetails.sort((a, b) => {
+         const totalViewsStrFirst = a.others?.views.replace("K", "");
+         const totalViewsStrSecond = b.others?.views.replace("K", "");
+
+         const totalViewFirstNumber = parseFloat(totalViewsStrFirst) || 0;
+         const totalViewSecondNumber = parseFloat(totalViewsStrSecond) || 0;
+
+         return totalViewSecondNumber - totalViewFirstNumber;
+      });
+   }
 
    // if no data show a div.
-
    categoryDetails.length === 0
       ? noDataDiv.classList.remove("hidden")
       : noDataDiv.classList.add("hidden");
 
+   movieContainer.innerHTML = "";
    for (let category of categoryDetails) {
       // conditioning: to show verified badge or not
       const isVerified = category.authors[0].verified || false;
@@ -91,4 +111,4 @@ const getParticularCategory = async (cat_id) => {
    }
 };
 
-getParticularCategory(category_id);
+getParticularCategory(category_id, sorted);
