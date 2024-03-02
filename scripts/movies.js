@@ -22,13 +22,21 @@ loadAllCategories();
 const displayCategories = (cats) => {
    cats.forEach((cat) => {
       const button = document.createElement("button");
-      button.className = "btn btn-primary mx-2";
+      button.className = "cat-btn btn btn-primary mx-2";
       button.innerText = cat.category;
+
       button.addEventListener("click", () => {
+         const allCatBtn = document.querySelectorAll(".cat-btn");
+         allCatBtn.forEach((btn) => btn.classList.remove("bg-red-500"));
+         button.classList.add("bg-red-500");
          getParticularCategory(`${cat.category_id}`);
       });
+
       btnContainer.appendChild(button);
    });
+
+   const firstCatButton = document.querySelector(".cat-btn");
+   firstCatButton.classList.add("bg-red-500");
 };
 
 // 3rd function
@@ -39,7 +47,6 @@ const getParticularCategory = async (cat_id) => {
    );
    const data = await res.json();
    const categoryDetails = data.data;
-   console.log(categoryDetails);
 
    movieContainer.innerHTML = "";
 
@@ -50,8 +57,14 @@ const getParticularCategory = async (cat_id) => {
       : noDataDiv.classList.add("hidden");
 
    for (let category of categoryDetails) {
-      console.log(category);
+      // conditioning: to show verified badge or not
+      const isVerified = category.authors[0].verified || false;
+      let verifiedBadge = "";
+      if (isVerified) {
+         verifiedBadge = `<img class="verify-img" src="assets/icons8-media-64.png" alt="" />`;
+      }
 
+      // creating individual divs for each item
       const div = document.createElement("div");
       div.innerHTML = `
         <!-- main image -->
@@ -68,11 +81,12 @@ const getParticularCategory = async (cat_id) => {
                 <h3>${category.title}</h3>
                 <p>${category.authors[0].profile_name}</p>
                 <p>${category.others.views.replace("K", "")}K Views</p>
-                <p>Verify or not</p>
+                ${verifiedBadge}
             </div>
         </div>
         
         `;
+
       movieContainer.appendChild(div);
    }
 };
