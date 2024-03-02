@@ -57,7 +57,7 @@ const getParticularCategory = async (cat_id, sorted) => {
    const data = await res.json();
    const categoryDetails = data.data;
 
-   // sorting data functionality
+   // sorting data conditional and functionality
    if (sorted) {
       categoryDetails.sort((a, b) => {
          const totalViewsStrFirst = a.others?.views.replace("K", "");
